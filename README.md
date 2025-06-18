@@ -1,0 +1,1 @@
+# logo_similarity_challenge
