@@ -194,4 +194,4 @@ cython_debug/
 .cursorindexingignore
 
 # Ignore image directories
-extracted_logos
+data

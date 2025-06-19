@@ -10,7 +10,10 @@ Could only only read 3416/4384 \(77.91\%\) domains
 - clearbit API + webscrap(largest '\*logo\*'): 100% but a lot of noise with bad images that are not logos
 
 - clearbit, scrap svg, favicon, scrap largest: 98.19%
-   📊 Extraction Method Breakdown:
-  - clearbit: 2905 (86.56%)
-  - scrap_favicon: 430 (12.81%)
-  - scrap_largest: 21 (0.63%)
+📊 Extraction Method Breakdown:
+  - clearbit: 2912 (86.77%)
+  - scrap_favicon: 241 (7.18%)
+  - scrap_logo: 203 (6.05%)
+  - scrap_largest: 0 (0%)
+
+- tried using the logos that are a url query, 0 no improvements

@@ -65,7 +65,7 @@ def webscrap_logo_largest(domain):
 
     return None
 
-def webscrap_logo_svg(domain):
+def webscrap_logo(domain):
     url = f'https://{domain}'
     try:
         response = requests.get(url, timeout=timeout, headers=headers_browser)
@@ -74,7 +74,9 @@ def webscrap_logo_svg(domain):
             img_tags = soup.find_all('img')
             for img in img_tags:
                 src = img.get('src') or img.get('data-src')
-                if src and re.search(r'logo.*\.svg$', src, re.IGNORECASE):
+                if re.search(r'logo', src, re.IGNORECASE) or \
+                        re.search(r'logo', (img.get('alt') or ''), re.IGNORECASE) or \
+                        re.search(r'logo', (img.get('class') or [''])[0], re.IGNORECASE):
                     full_url = urljoin(url, src)
                     img_resp = requests.get(full_url, timeout=timeout, headers=headers_browser)
                     if img_resp.status_code == 200:
@@ -123,8 +125,8 @@ def fetch_logo(domain):
 
     # 2. Try SVG logo
     if result is None:
-        result = webscrap_logo_svg(domain)
-        method = 'scrap_svg' if result else None
+        result = webscrap_logo(domain)
+        method = 'scrap_logo' if result else None
 
     # 3. Try favicon
     if result is None:
@@ -144,7 +146,7 @@ def fetch_logo(domain):
     return (domain, method)
 
 
-def extract_logos_multithreaded(file, max_threads=10, failed_domains_csv="domain_extraction_results.csv"):
+def extract_logos_multithreaded(file, max_threads=10):
     df = pd.read_parquet(file)
     domains = df['domain'].dropna().unique().tolist()
 
@@ -192,5 +194,5 @@ def extract_logos_multithreaded(file, max_threads=10, failed_domains_csv="domain
         print(f"  - {method}: {count} ({pct:.2f}%)")
 
 
-extract_logos_multithreaded(input_name, max_threads=10)
+extract_logos_multithreaded(input_name, max_threads=16)
 
