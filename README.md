@@ -17,3 +17,18 @@ Could only only read 3416/4384 \(77.91\%\) domains
   - scrap_largest: 0 (0%)
 
 - tried using the logos that are a url query, 0 no improvements
+
+## Clustering
+### DBSCAN
+- no transforms
+  - RGBA: 1939/3356
+  - LA: 1911/3356
+- crop:
+  - LA: good separation, noise: 1794/3356, a lot better for AAMCO
+  - RGBA: noise 1935/3356
+- blur + crop: not a big inorivement, around 2300 images as noise, 1000 grouped, mostly overfit
+  - RGBA
+  - LA: 203 groups and a lot of noise, bad
+- blur + crop + noise:
+  - RGBA: found 217groups but around 3/4 was consideres noise, bad
+  - LA: ALL NOISE, 0 LEARN FFS 
