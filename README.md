@@ -66,13 +66,13 @@ Explored different combinations of image preprocessing and feature extraction te
 - Epsilon: 2
 - Min_samples: 2
 #### Without Preprocessing:
-- **RGBA**: 1,939 / 3,356 clustered  
-- **LA**: 1,911 / 3,356 clustered
+- **RGBA**: 1,939 / 3,356 unclustered  
+- **LA**: 1,911 / 3,356 unclustered
 
 #### With Center Cropping (128x128 to 40x40):
-- **LA**: Improved separation, 1,794 clustered  
+- **LA**: Improved separation, 1,794 unclustered  
   - ✅ Much better for cases like **AAMCO** with many variations  
-- **RGBA**: 1,935 clustered
+- **RGBA**: 1,935 unclustered
 
 #### Blur + Crop:
 - Around **2,300 logos marked as noise**, only ~1,000 successfully grouped  
