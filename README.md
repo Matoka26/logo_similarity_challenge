@@ -1,34 +1,88 @@
-# logo_similarity_challenge
+# 🧠 Logo Similarity Challenge
 
-## Web Scraping
+This project explores various methods to **scrape logos from the web**, extract features, and **cluster similar brand logos** using computer vision techniques.
 
-Could only only read 3416/4384 \(77.91\%\) domains
+---
 
-- clearbit API: 84%
-- clearbit API + webscrap('\*logo\*.svg'): 89%
-- clearbit API + webscrap('\*logo\*.svg') + favicon: %
-- clearbit API + webscrap(largest '\*logo\*'): 100% but a lot of noise with bad images that are not logos
+## 🌐 Web Scraping Performance
 
-- clearbit, scrap svg, favicon, scrap largest: 98.19%
-📊 Extraction Method Breakdown:
-  - clearbit: 2912 (86.77%)
-  - scrap_favicon: 241 (7.18%)
-  - scrap_logo: 203 (6.05%)
-  - scrap_largest: 0 (0%)
+Attempted to extract logos from **4,384 domains** using a combination of APIs and scraping strategies. The best accuracy achieved was:
 
-- tried using the logos that are a url query, 0 no improvements
+- ✅ **98.19% success** rate using a hybrid of multiple techniques
 
-## Clustering
-### DBSCAN
-- no transforms
-  - RGBA: 1939/3356
-  - LA: 1911/3356
-- crop:
-  - LA: good separation, noise: 1794/3356, a lot better for AAMCO
-  - RGBA: noise 1935/3356
-- blur + crop: not a big inorivement, around 2300 images as noise, 1000 grouped, mostly overfit
-  - RGBA
-  - LA: 203 groups and a lot of noise, bad
-- blur + crop + noise:
-  - RGBA: found 217groups but around 3/4 was consideres noise, bad
-  - LA: ALL NOISE, 0 LEARN FFS 
+### 📈 Strategy Comparison:
+
+| Method                                                                | % of Total              |
+|-----------------------------------------------------------------------|-------------------------|
+| Clearbit API                                                          | 84%                     |
+| Clearbit API + Logo SVG Scraping (`*logo*.svg`)                       | 89%                     |
+| Clearbit API + "Largest Logo" (heuristic on image size + filename)    | 100% ( but a lot of noise) |
+| Clearbit API + Logo SVG Scraping +  Favicon Scraping + "Largest Logo" | 98.19%✅                 | 
+
+### Best Method Breakdown
+| Method                                                  | Count | Coverage |
+|---------------------------------------------------------|-------|----------|
+| Clearbit API                                            | 2912  | 86.77%   |
+| Logo SVG Scraping                                       | 203   | 6.05%    |
+| Favicon Scraping                                        | 241   | 7.18 %   |
+| "Largest Logo"                                          | 0     | 0%       |
+
+>  Attempting to extract logos via URL query parameters yielded **no improvement**.
+### The output logos can be found in [this kaggle dataset](https://www.kaggle.com/datasets/mihaildanutdogaru/logo-similarity-data) containing:
+- `extraction_method.csv` file with the logo extraction method
+- `extracted_logos` dir containing the raw logos
+- `resized_logos` dir with all logos resized to *128x128* pixels
+- `logos.snappy.parquet` file containing the original domain names
+
+---
+
+## 🤖 Clustering Approaches
+
+Explored different combinations of image preprocessing and feature extraction techniques to group similar logos using **DBSCAN** and **ResNet** embeddings.
+
+---
+> RGBA: Transparent RGB images  
+> LA: Transparent Grayscale Images
+### 📌 DBSCAN Clustering
+
+#### Without Preprocessing:
+- **RGBA**: 1,939 / 3,356 clustered  
+- **LA**: 1,911 / 3,356 clustered
+
+#### With Center Cropping (128x128 to 40x40):
+- **LA**: Improved separation, 1,794 clustered  
+  - ✅ Much better for cases like **AAMCO** with many variations  
+- **RGBA**: 1,935 clustered
+
+#### Blur + Crop:
+- Around **2,300 logos marked as noise**, only ~1,000 successfully grouped  
+- Performance was worse, potentially **overfitting**, only recognizing perfectly identical logos
+
+#### Blur + Crop + Gaussian Noise:
+- **RGBA**: 217 groups found, but **~75% marked as noise**  
+- **LA**: Completely failed — **0 groups formed**, everything considered noise
+
+#### Zernike Polynomials:
+- ❌ Performance was **very poor**, not usable for this task
+
+---
+
+### 🧬 ResNet Feature Clustering
+
+Using pre-trained ResNet50 embeddings for image similarity:
+
+| Method                  | Clustered Logos / Total |
+|-------------------------|--------------------------|
+| ResNet (plain)          | 1,634 / 3,356✅            |
+| ResNet + Gaussian Noise | 3,272 / 3,356            |
+| ResNet + Jitter         | 2,624 / 3,356            |
+
+--- 
+### Final results 
+- Can be found in `labeled_data.zip`
+- The prefix number represents the corresponding group
+- Prefix `-1` means the logo is not contained in any class
+
+---
+
+
