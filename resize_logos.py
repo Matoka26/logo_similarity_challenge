@@ -1,7 +1,7 @@
 # -------------------------------
 # 🖼️ LOGO IMAGE RESIZER (Multithreaded)
 # -------------------------------
-# Resizes images from `input_dir` and saves them to `output_dir`
+# Resizes assets from `input_dir` and saves them to `output_dir`
 # using Python's PIL and ThreadPoolExecutor for speed.
 # -------------------------------
 
@@ -15,7 +15,7 @@ import os
 # -------------------------------
 
 input_dir = 'extracted_logos'  # Folder containing original logos
-output_dir = 'resized_logos'  # Folder to store resized images
+output_dir = 'resized_logos'  # Folder to store resized assets
 os.makedirs(output_dir, exist_ok=True)
 
 
@@ -29,8 +29,8 @@ def resize_single_image(filename, input_dir, output_dir, size=(128, 128)):
 
     Args:
         filename (str): Name of the image file.
-        input_dir (str): Directory containing original images.
-        output_dir (str): Directory to save resized images.
+        input_dir (str): Directory containing original assets.
+        output_dir (str): Directory to save resized assets.
         size (tuple): Target size (width, height).
     """
     input_path = os.path.join(input_dir, filename)
@@ -49,11 +49,11 @@ def resize_single_image(filename, input_dir, output_dir, size=(128, 128)):
 
 def resize_logos_multithreaded(input_dir, output_dir, size=(128, 128), max_threads=10):
     """
-    Resize all images in the input_dir using multithreading.
+    Resize all assets in the input_dir using multithreading.
 
     Args:
-        input_dir (str): Directory with original images.
-        output_dir (str): Output directory for resized images.
+        input_dir (str): Directory with original assets.
+        output_dir (str): Output directory for resized assets.
         size (tuple): Resize target (width, height).
         max_threads (int): Number of threads to use.
     """
@@ -69,7 +69,7 @@ def resize_logos_multithreaded(input_dir, output_dir, size=(128, 128), max_threa
                 image_files
             ),
             total=len(image_files),
-            desc="🔄 Resizing images"
+            desc="🔄 Resizing assets"
         ))
 
 
